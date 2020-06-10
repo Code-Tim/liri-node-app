@@ -2,7 +2,7 @@ require("dotenv").config();
 
 // Add the code required to import the keys.js file and store it in a variable.
 var keys = require("./keys.js");
-var SpotifyPackage = require('node-spotify-api');
+var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 var axios = require('axios');
 var fs = require("fs");
@@ -23,8 +23,14 @@ controller()
 function controller() {
 
     switch (firstInput) {
+        case "movie-this":
+            movie(secondInput);
+            break;
         case "concert-this":
             concertThis(secondInput)
+            break;
+        case "spotify-this-song":
+            spotThis(secondInput)
             break;
         case "do-what-it-says":
             doWhatItSays()
@@ -39,7 +45,7 @@ function youNeedHelp() {
     console.log("I didn't understand that")
     //ICEBOX: inquirer
 }
-JSON.stringify(data, null, 10)
+// JSON.stringify(data, null, 10)
 
 function concertThis(artist = "Celine Dion") {
     // What Each Command Should Do
@@ -67,14 +73,25 @@ function concertThis(artist = "Celine Dion") {
 
 // This will show the following information about the song in your terminal/bash window
 // node liri.js spotify-this-song '<song name here>'
+function spotThis() {
 
-// Artist(s)
+    spotify
+        .search({ type: 'track', query: secondInput })
+        .then(function (response) {
+            // Artist(s)
+            console.log(response.tracks.items[0].album.artists[0].name);
+            // The song's name
+            console.log(response.tracks.items[0].name);
+            // A preview link of the song from Spotify
+            console.log(response.tracks.items[0].preview_url);
+            // The album that the song is from
+            console.log(response.tracks.items[0].album.name);
 
-// The song's name
-
-// A preview link of the song from Spotify
-
-// The album that the song is from
+        })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
 
 // If no song is provided then your program will default to "The Sign" by Ace of Base.
 
