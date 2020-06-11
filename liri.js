@@ -119,7 +119,7 @@ function movieThis() {
                 //   * IMDB Rating of the movie.
                 console.log('Rating: ' + response.data.imdbRating);
                 //   * Rotten Tomatoes Rating of the movie.
-                console.log('Rotten Tomatoes Rating: ' + response.data.Ratings[1]);
+                console.log('Rotten Tomatoes Rating: ' + response.data.Ratings[1].Value);
                 //   * Country where the movie was produced.
                 console.log('Country of Origin: ' + response.data.Country);
                 //   * Language of the movie.
