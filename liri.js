@@ -23,11 +23,11 @@ controller()
 function controller() {
 
     switch (firstInput) {
-        case "movie-this":
-            movie(secondInput);
-            break;
         case "concert-this":
             concertThis(secondInput)
+            break;
+        case "movie-this":
+            movieThis(secondInput);
             break;
         case "spotify-this-song":
             spotThis(secondInput)
@@ -53,17 +53,22 @@ function concertThis(artist = "Celine Dion") {
 
     // This will search the Bands in Town Artist Events API ("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp") for an artist and render the following information about each event to the terminal:
     let url = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-    // Name of the venue
     console.log(url)
     axios.get(url)
         .then(function (response) {
             // handle success
             let stub = {}
-            console.log(response);
-        })
-    // Venue location
+            // Name of the venue
+            var venue = response.data[i].venue.name;
+            // Venue location
+            var location = response.data[i].venue.city + ", " + response.data[i].venue.region;
+            // Date of the Event (use moment to format this as "MM/DD/YYYY")
+            var date = dayjs(response.data[i].datetime).format('{YYYY} MM-DDTHH:mm:ss sss [z] A');
 
-    // Date of the Event (use moment to format this as "MM/DD/YYYY")
+            console.log(response);
+
+        })
+
 
     // Important: There is no need to sign up for a Bands in Town api_id key. Use the codingbootcamp as your app_id. For example, the URL used to search for "Celine Dion" would look like the following:
 
@@ -97,18 +102,46 @@ function spotThis() {
         });
 }
 // node liri.js movie-this '<movie name here>'
+function movieThis() {
+    // If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
+    if (!secondInput) {
+        secondInput = 'Mr. Nobody';
+    }
 
+    axios
+        .get('http://www.omdbapi.com/?t=' + secondInput + '&y=&plot=short&apikey=trilogy')
+        .then(
+            function (response) {
+                //   * Title of the movie.
+                console.log("\nTitle: " + response.data.Title);
+                //   * Year the movie came out.
+                console.log('Date Released: ' + response.data.Released);
+                //   * IMDB Rating of the movie.
+                console.log('Rating: ' + response.data.imdbRating);
+                //   * Rotten Tomatoes Rating of the movie.
+                console.log('Rotten Tomatoes Rating: ' + response.data.Ratings[1]);
+                //   * Country where the movie was produced.
+                console.log('Country of Origin: ' + response.data.Country);
+                //   * Language of the movie.
+                console.log('Language: ' + response.data.Language);
+                //   * Plot of the movie.
+                console.log('Main Plot: ' + response.data.Plot);
+                //   * Actors in the movie.
+                console.log('Actors: ' + response.data.Actors);
+
+
+            }
+        )
+
+        // .search({
+
+        // })
+        .catch(function (err) {
+            console.log(err);
+        });
+}
 // This will output the following information to your terminal/bash window:
 
-//   * Title of the movie.
-//   * Year the movie came out.
-//   * IMDB Rating of the movie.
-//   * Rotten Tomatoes Rating of the movie.
-//   * Country where the movie was produced.
-//   * Language of the movie.
-//   * Plot of the movie.
-//   * Actors in the movie.
-// If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 
 // If you haven't watched "Mr. Nobody," then you should: http://www.imdb.com/title/tt0485947/
 
